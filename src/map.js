@@ -18,6 +18,18 @@ class Counts {
 
 	inc (key) { return this.add(key, 1) }
 	dec (key) { return this.add(key, -1) }
+
+	mostFrequent () {
+		let maxKey
+		let maxCount = -Infinity
+		for (const [ key, count ] in this._map.entries()) {
+			if (count > maxCount) {
+				maxCount = count
+				maxKey = key
+			}
+		}
+		return maxKey
+	}
 }
 
 module.exports = { Counts }

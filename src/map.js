@@ -22,7 +22,7 @@ class Counts {
 	mostFrequent () {
 		let maxKey
 		let maxCount = -Infinity
-		for (const [ key, count ] in this._map.entries()) {
+		for (const [ key, count ] of this._map.entries()) {
 			if (count > maxCount) {
 				maxCount = count
 				maxKey = key

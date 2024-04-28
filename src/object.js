@@ -1,4 +1,3 @@
-const { maxBy } = require('@kmamal/util/array/max')
 
 class Counts {
 	constructor () {

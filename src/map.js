@@ -4,15 +4,18 @@ class Counts {
 	constructor () {
 		this._map = new Map()
 		addDefault(this._map, () => 0)
+		this._total = 0
 	}
 
 	getMap () { return this._map }
+	total () { return this._total }
 
 	get (key) { return this._map.get(key) }
 
 	add (key, n) {
 		const m = this._map.get(key) + n
 		this._map.set(key, m)
+		this._total += n
 		return m
 	}
 

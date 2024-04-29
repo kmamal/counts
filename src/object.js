@@ -2,9 +2,11 @@
 class Counts {
 	constructor () {
 		this._object = Object.create(null)
+		this._total = 0
 	}
 
 	getObject () { return this._object }
+	total () { return this._total }
 
 	get (key) {
 		this._object[key] ??= 0
@@ -13,6 +15,7 @@ class Counts {
 
 	add (key, n) {
 		this._object[key] ??= 0
+		this._total += n
 		return (this._object[key] += n)
 	}
 

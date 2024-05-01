@@ -1,38 +1,51 @@
-const { addDefault } = require('@kmamal/util/map/add-default')
 
-class Counts {
-	constructor (init) {
-		this._map = init ?? new Map()
-		addDefault(this._map, () => 0)
-		this._total = 0
-	}
+const kTotal = Symbol("total")
 
-	getMap () { return this._map }
-	total () { return this._total }
 
-	get (key) { return this._map.get(key) }
-
-	add (key, n) {
-		const m = this._map.get(key) + n
-		this._map.set(key, m)
-		this._total += n
-		return m
-	}
-
-	inc (key) { return this.add(key, 1) }
-	dec (key) { return this.add(key, -1) }
-
-	mostFrequent () {
-		let maxKey
-		let maxCount = -Infinity
-		for (const [ key, count ] of this._map.entries()) {
-			if (count > maxCount) {
-				maxCount = count
-				maxKey = key
-			}
-		}
-		return maxKey
-	}
+const add = (counts, key, n) => {
+	const m = counts.get(key) ?? 0
+	counts.set(key, m + n)
+	counts[kTotal] = total(counts) + n
+	return m
 }
 
-module.exports = { Counts }
+const inc = (counts, key) => add(counts, key, 1)
+const dec = (counts, key) => add(counts, key, -1)
+
+const total = (counts) => {
+	if (counts[kTotal] === undefined) {
+		let sum = 0
+		for (const key of counts.keys()) { sum += counts.get(key) }
+		counts[kTotal] = sum
+	}
+	return counts[kTotal]
+}
+
+const mostFrequent = (counts) => {
+	let maxKey
+	let maxCount = -Infinity
+	for (const key of counts.keys()) {
+		const count = counts.get(key)
+		if (count > maxCount) {
+			maxCount = count
+			maxKey = key
+		}
+	}
+	return maxKey
+}
+
+const reset = (counts) => {
+	counts.clear()
+	delete counts[kTotal]
+}
+
+
+module.exports = {
+	SYM: { kTotal },
+	add,
+	inc,
+	dec,
+	total,
+	mostFrequent,
+	reset,
+}

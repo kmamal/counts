@@ -1,39 +1,49 @@
+const { empty$$$ } = require('@kmamal/util/object/empty')
 
-class Counts {
-	constructor (init) {
-		this._object = init ?? Object.create(null)
-		this._total = 0
-	}
+const kTotal = Symbol("total")
 
-	getObject () { return this._object }
-	total () { return this._total }
 
-	get (key) {
-		this._object[key] ??= 0
-		return this._object[key]
-	}
-
-	add (key, n) {
-		this._object[key] ??= 0
-		this._total += n
-		return (this._object[key] += n)
-	}
-
-	inc (key) { return this.add(key, 1) }
-	dec (key) { return this.add(key, -1) }
-
-	mostFrequent () {
-		let maxKey
-		let maxCount = -Infinity
-		for (const key in this._object) {
-			const count = this._object[key]
-			if (count > maxCount) {
-				maxCount = count
-				maxKey = key
-			}
-		}
-		return maxKey
-	}
+const add = (counts, key, n) => {
+	const m = counts[key] ?? 0
+	counts.set(key, m + n)
+	counts[kTotal] = total(counts) + n
+	return m
 }
 
-module.exports = { Counts }
+const inc = (counts, key) => add(counts, key, 1)
+const dec = (counts, key) => add(counts, key, -1)
+
+const total = (counts) => {
+	if (counts[kTotal] === undefined) {
+		let sum = 0
+		for (const key in counts) { sum += counts[key] }
+		counts[kTotal] = sum
+	}
+	return counts[kTotal]
+}
+
+const mostFrequent = (counts) => {
+	let maxKey
+	let maxCount = -Infinity
+	for (const key in counts) {
+		const count = counts[key]
+		if (count > maxCount) {
+			maxCount = count
+			maxKey = key
+		}
+	}
+	return maxKey
+}
+
+const reset = empty$$$
+
+
+module.exports = {
+	SYM: { kTotal },
+	add,
+	inc,
+	dec,
+	total,
+	mostFrequent,
+	reset,
+}

@@ -3,9 +3,9 @@ const kTotal = Symbol("total")
 
 
 const add = (counts, key, n) => {
+	counts[kTotal] = total(counts) + n
 	const m = counts.get(key) ?? 0
 	counts.set(key, m + n)
-	counts[kTotal] = total(counts) + n
 	return m
 }
 

@@ -1,8 +1,8 @@
 const { addDefault } = require('@kmamal/util/map/add-default')
 
 class Counts {
-	constructor () {
-		this._map = new Map()
+	constructor (init) {
+		this._map = init ?? new Map()
 		addDefault(this._map, () => 0)
 		this._total = 0
 	}

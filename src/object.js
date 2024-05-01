@@ -1,7 +1,7 @@
 
 class Counts {
-	constructor () {
-		this._object = Object.create(null)
+	constructor (init) {
+		this._object = init ?? Object.create(null)
 		this._total = 0
 	}
 
